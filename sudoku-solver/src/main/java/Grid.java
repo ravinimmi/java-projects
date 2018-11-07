@@ -50,14 +50,33 @@ public class Grid {
         if(cells[i][j] < 1 || cells[i][j] > 9)
             return false;
 
-        for(int t=i - 1; t>=0; t--) {
+        for(int t=i-1; t>=0; t--) {
             if (this.cells[t][j] == this.cells[i][j])
                 return false;
         }
 
-        for(int t=j - 1; t>=0; t--) {
+        for(int t=j-1; t>=0; t--) {
             if (this.cells[i][t] == this.cells[i][j])
                 return false;
+        }
+
+        boolean x = isValidBox(3 * (i/3), 3 * (j/3));
+
+        return x;
+    }
+
+    private boolean isValidBox(int row, int col) {
+        int[] hash = {0, 0, 0, 0, 0, 0, 0, 0, 0};
+
+        for (int i = row; i < row + 3; i++) {
+            for (int j = col; j < col + 3; j++) {
+                if(cells[i][j] == 0)
+                    continue;
+
+                if(hash[cells[i][j] - 1] == 1)
+                    return false;
+                hash[cells[i][j] - 1] = 1;
+            }
         }
 
         return true;
