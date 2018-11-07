@@ -57,13 +57,17 @@ public class Grid {
                     continue;
                 }
                 iter++;
-//                if(iter % 10000000 == 0) {
-//                    System.out.println(iter);
-//                    print();
-//                }
+                printPartial(iter);
             }
         }
         System.out.println("No. of iterations = " + iter);
+    }
+
+    private void printPartial(int iter) {
+        if(iter % 10000000 == 0) {
+            System.out.println(iter);
+            print();
+        }
     }
 
     private boolean isValid(int i, int j) {
