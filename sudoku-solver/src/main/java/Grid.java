@@ -24,19 +24,20 @@ public class Grid {
         for (int i = 0; i < cells.length; i++) {
             for (int j = 0; j < cells[i].length; j++) {
 
-                do {
+                while(!isValid(i, j) && cells[i][j] != -1) {
                     cells[i][j] = setNextCandidate(cells[i][j]);
-                } while(!isValid(i, j) && cells[i][j] != -1);
+                }
 
                 if(cells[i][j] == -1) {
                     cells[i][j] = 0;
-                    if(j - 1 > 0){
+                    if(j - 1 >= 0){
                         j -= 2;
                     }
                     else {
-                        j = 8;
+                        j = 7;
                         i = i - 1;
                     }
+                    cells[i][j+1] += 1;
                     continue;
                 }
                 iter++;
@@ -63,7 +64,7 @@ public class Grid {
     }
 
     private int setNextCandidate(int num) {
-        if (num == cells.length)
+        if (num >= cells.length)
             return -1;
         return num + 1;
     }
