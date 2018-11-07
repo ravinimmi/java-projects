@@ -24,20 +24,10 @@ class Sudoku {
         }
     }
 
-    int[][] getSolved() {
+    public int[][] getSolved() {
         if(!isSolved())
             solve();
         return cells;
-    }
-
-    private boolean isSolved() {
-        for (int i = 0; i < cells.length; i++) {
-            for (int j = 0; j < cells[i].length; j++) {
-                if(!isValid(i, j))
-                    return false;
-            }
-        }
-        return true;
     }
 
     void solve() {
@@ -65,6 +55,16 @@ class Sudoku {
             }
         }
         System.out.println("No. of iterations = " + iter);
+    }
+
+    private boolean isSolved() {
+        for (int i = 0; i < cells.length; i++) {
+            for (int j = 0; j < cells[i].length; j++) {
+                if(!isValid(i, j))
+                    return false;
+            }
+        }
+        return true;
     }
 
     private CellPosition getPrevEditableCellPos(CellPosition pos) {
