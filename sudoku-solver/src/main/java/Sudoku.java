@@ -54,14 +54,9 @@ class Sudoku {
                     if(isCellEditable(i, j))
                         cells[i][j] = 0;
 
-                    do {
-                        if (j >= 1) {
-                            j -= 1;
-                        } else {
-                            j = cells.length - 1;
-                            i = i - 1;
-                        }
-                    } while(!isCellEditable(i, j));
+                    CellPosition pos = getPrevEditableCellPos(new CellPosition(i, j));
+                    i = pos.row;
+                    j = pos.col;
 
                     cells[i][j] += 1;
                     j--;
@@ -70,6 +65,22 @@ class Sudoku {
             }
         }
         System.out.println("No. of iterations = " + iter);
+    }
+
+    private CellPosition getPrevEditableCellPos(CellPosition pos) {
+        int row = pos.row;
+        int col = pos.col;
+
+        do {
+            if (col >= 1) {
+                col = col - 1;
+            } else {
+                row = row - 1;
+                col = cells.length - 1;
+            }
+        } while(!isCellEditable(row, col));
+
+        return new CellPosition(row, col);
     }
 
     private boolean isCellEditable(int i, int j) {
@@ -126,5 +137,16 @@ class Sudoku {
         if (num >= cells.length)
             return -1;
         return num + 1;
+    }
+}
+
+
+class CellPosition {
+    int row;
+    int col;
+
+    CellPosition(int row, int col) {
+        this.row = row;
+        this.col = col;
     }
 }
