@@ -67,22 +67,31 @@ public class Grid {
     }
 
     private boolean isValid(int i, int j) {
-        if(cells[i][j] < 1 || cells[i][j] > 9)
-            return false;
+        boolean res = isValidValue(this.cells[i][j]);
+        res = res && isValidRow(i, j);
+        res = res && isValidCol(i, j);
+        res = res && isValidBox(3 * (i/3), 3 * (j/3));
+        return res;
+    }
 
-        for(int t=i-1; t>=0; t--) {
-            if (this.cells[t][j] == this.cells[i][j])
+    private boolean isValidValue(int val) {
+        return (val >= 1 && val <= 9);
+    }
+
+    private boolean isValidRow(int row, int col) {
+        for(int t=col-1; t>=0; t--) {
+            if (this.cells[row][t] == this.cells[row][col])
                 return false;
         }
+        return true;
+    }
 
-        for(int t=j-1; t>=0; t--) {
-            if (this.cells[i][t] == this.cells[i][j])
+    private boolean isValidCol(int row, int col) {
+        for(int t=row-1; t>=0; t--) {
+            if (this.cells[t][col] == this.cells[row][col])
                 return false;
         }
-
-        boolean x = isValidBox(3 * (i/3), 3 * (j/3));
-
-        return x;
+        return true;
     }
 
     private boolean isValidBox(int row, int col) {
