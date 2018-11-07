@@ -34,23 +34,23 @@ public class Grid {
         for (int i = 0; i < cells.length; i++) {
             for (int j = 0; j < cells[i].length; j++) {
 
-                while(!isValid(i, j) && cells[i][j] != -1 && init_cells[i][j] == 0) {
-                    cells[i][j] = setNextCandidate(cells[i][j]);
+                while(!isValid(i, j) && !areValuesExhausted(i, j) && isCellEditable(i, j)) {
+                    cells[i][j] = getNextCandidate(cells[i][j]);
                 }
 
                 if(!isValid(i, j)) {
-                    if(init_cells[i][j] == 0)
+
+                    if(isCellEditable(i, j))
                         cells[i][j] = 0;
 
                     do {
-                        if (j - 1 >= 0) {
+                        if (j >= 1) {
                             j -= 1;
                         } else {
-                            j = 8;
+                            j = this.cells.length - 1;
                             i = i - 1;
                         }
-                    } while(init_cells[i][j] != 0);
-
+                    } while(!isCellEditable(i, j));
 
                     cells[i][j] += 1;
                     j--;
@@ -61,6 +61,14 @@ public class Grid {
             }
         }
         System.out.println("No. of iterations = " + iter);
+    }
+
+    private boolean isCellEditable(int i, int j) {
+        return this.init_cells[i][j] == 0;
+    }
+
+    private boolean areValuesExhausted(int i, int j) {
+        return this.cells[i][j] == -1;
     }
 
     private void printPartial(int iter) {
@@ -115,7 +123,7 @@ public class Grid {
         return true;
     }
 
-    private int setNextCandidate(int num) {
+    private int getNextCandidate(int num) {
         if (num >= cells.length)
             return -1;
         return num + 1;
