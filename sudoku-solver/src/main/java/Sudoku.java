@@ -1,20 +1,20 @@
-public class Sudoku {
+class Sudoku {
     private int[][] init_cells;
     private int[][] cells;
 
-    public Sudoku(int[][] cells) {
-        this.init_cells = new int[9][9];
+    Sudoku(int[][] cells) {
+        init_cells = new int[9][9];
         this.cells = new int[9][9];
 
         for (int i = 0; i < cells.length; i++) {
             for (int j = 0; j < cells[i].length; j++) {
                 this.cells[i][j] = cells[i][j];
-                this.init_cells[i][j] = cells[i][j];
+                init_cells[i][j] = cells[i][j];
             }
         }
     }
 
-    public void print() {
+    void print() {
         System.out.println("Grid:");
         for (int i = 0; i < cells.length; i++) {
             for (int j = 0; j < cells[i].length; j++) {
@@ -24,7 +24,7 @@ public class Sudoku {
         }
     }
 
-    public int[][] getSolved() {
+    int[][] getSolved() {
         if(!isSolved())
             solve();
         return cells;
@@ -40,7 +40,7 @@ public class Sudoku {
         return true;
     }
 
-    public void solve() {
+    void solve() {
         int iter= 0;
         for (int i = 0; i < cells.length; i++) {
             for (int j = 0; j < cells[i].length; j++) {
@@ -58,7 +58,7 @@ public class Sudoku {
                         if (j >= 1) {
                             j -= 1;
                         } else {
-                            j = this.cells.length - 1;
+                            j = cells.length - 1;
                             i = i - 1;
                         }
                     } while(!isCellEditable(i, j));
@@ -67,29 +67,21 @@ public class Sudoku {
                     j--;
                 }
                 iter++;
-//                printPartial(iter);
             }
         }
         System.out.println("No. of iterations = " + iter);
     }
 
     private boolean isCellEditable(int i, int j) {
-        return this.init_cells[i][j] == 0;
+        return init_cells[i][j] == 0;
     }
 
     private boolean areValuesExhausted(int i, int j) {
-        return this.cells[i][j] == -1;
-    }
-
-    private void printPartial(int iter) {
-        if(iter % 10000000 == 0) {
-            System.out.println(iter);
-            print();
-        }
+        return cells[i][j] == -1;
     }
 
     private boolean isValid(int i, int j) {
-        boolean res = isValidValue(this.cells[i][j]);
+        boolean res = isValidValue(cells[i][j]);
         res = res && isValidRow(i, j);
         res = res && isValidCol(i, j);
         res = res && isValidBox(i, j);
