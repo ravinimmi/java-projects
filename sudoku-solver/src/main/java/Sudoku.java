@@ -9,11 +9,6 @@ public class Sudoku {
         for (int i = 0; i < cells.length; i++) {
             for (int j = 0; j < cells[i].length; j++) {
                 this.cells[i][j] = cells[i][j];
-            }
-        }
-
-        for (int i = 0; i < cells.length; i++) {
-            for (int j = 0; j < cells[i].length; j++) {
                 this.init_cells[i][j] = cells[i][j];
             }
         }
@@ -70,7 +65,6 @@ public class Sudoku {
 
                     cells[i][j] += 1;
                     j--;
-                    continue;
                 }
                 iter++;
 //                printPartial(iter);
