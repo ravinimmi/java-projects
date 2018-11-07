@@ -1,5 +1,23 @@
 public class Grid {
-    private int[][] cells = new int[9][9];
+    private int[][] init_cells;
+    private int[][] cells;
+
+    public Grid(int[][] cells) {
+        this.init_cells = new int[9][9];
+        this.cells = new int[9][9];
+
+        for (int i = 0; i < cells.length; i++) {
+            for (int j = 0; j < cells[i].length; j++) {
+                this.cells[i][j] = cells[i][j];
+            }
+        }
+
+        for (int i = 0; i < cells.length; i++) {
+            for (int j = 0; j < cells[i].length; j++) {
+                this.init_cells[i][j] = cells[i][j];
+            }
+        }
+    }
 
     public void print() {
         System.out.println("Grid:");
@@ -11,36 +29,38 @@ public class Grid {
         }
     }
 
-    public void setCells(int[][] cells) {
-        this.cells = cells;
-    }
-
-    public int[][] getCells() {
-        return this.cells;
-    }
-
     public void solve() {
         int iter= 0;
         for (int i = 0; i < cells.length; i++) {
             for (int j = 0; j < cells[i].length; j++) {
 
-                while(!isValid(i, j) && cells[i][j] != -1) {
+                while(!isValid(i, j) && cells[i][j] != -1 && init_cells[i][j] == 0) {
                     cells[i][j] = setNextCandidate(cells[i][j]);
                 }
 
-                if(cells[i][j] == -1) {
-                    cells[i][j] = 0;
-                    if(j - 1 >= 0){
-                        j -= 2;
-                    }
-                    else {
-                        j = 7;
-                        i = i - 1;
-                    }
-                    cells[i][j+1] += 1;
+                if(!isValid(i, j)) {
+                    if(init_cells[i][j] == 0)
+                        cells[i][j] = 0;
+
+                    do {
+                        if (j - 1 >= 0) {
+                            j -= 1;
+                        } else {
+                            j = 8;
+                            i = i - 1;
+                        }
+                    } while(init_cells[i][j] != 0);
+
+
+                    cells[i][j] += 1;
+                    j--;
                     continue;
                 }
                 iter++;
+//                if(iter % 10000000 == 0) {
+//                    System.out.println(iter);
+//                    print();
+//                }
             }
         }
         System.out.println("No. of iterations = " + iter);

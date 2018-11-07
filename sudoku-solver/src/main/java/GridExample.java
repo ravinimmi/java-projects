@@ -13,11 +13,15 @@ public class GridExample {
             {0, 9, 0, 0, 0, 0, 4, 0, 0},
         };
 
-        Grid grid = new Grid();
-        grid.setCells(cells);
+        Grid grid = new Grid(cells);
         grid.print();
+        long startTime = System.nanoTime();
         grid.solve();
+        long endTime = System.nanoTime();
+
+        long duration = (endTime - startTime) / 1000000;
         grid.print();
+        System.out.println("Time taken to solve = " + duration + " ms");
     }
 
     public static void generate() {
