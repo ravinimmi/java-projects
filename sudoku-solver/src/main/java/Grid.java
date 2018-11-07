@@ -20,15 +20,13 @@ public class Grid {
     }
 
     public void solve() {
-        int iter = 0;
+        int iter= 0;
         for (int i = 0; i < cells.length; i++) {
             for (int j = 0; j < cells[i].length; j++) {
-                cells[i][j] = getNextCandidate(cells[i][j]);
 
-                while(!isValid(i, j)) {
-                    cells[i][j] = getNextCandidate(cells[i][j]);
-//                    System.out.println(cells[i][j]);
-                }
+                do {
+                    cells[i][j] = setNextCandidate(cells[i][j]);
+                } while(!isValid(i, j) && cells[i][j] != -1);
 
                 if(cells[i][j] == -1) {
                     cells[i][j] = 0;
@@ -41,19 +39,16 @@ public class Grid {
                     }
                     continue;
                 }
-
                 iter++;
-
-//                if (iter % 1000 == 0) {
-//                    System.out.println(iter);
-//                    print();
-//                }
             }
         }
         System.out.println("No. of iterations = " + iter);
     }
 
     private boolean isValid(int i, int j) {
+        if(cells[i][j] < 1 || cells[i][j] > 9)
+            return false;
+
         for(int t=i - 1; t>=0; t--) {
             if (this.cells[t][j] == this.cells[i][j])
                 return false;
@@ -67,7 +62,7 @@ public class Grid {
         return true;
     }
 
-    private int getNextCandidate(int num) {
+    private int setNextCandidate(int num) {
         if (num == cells.length)
             return -1;
         return num + 1;
