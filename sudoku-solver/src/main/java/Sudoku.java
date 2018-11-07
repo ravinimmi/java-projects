@@ -1,8 +1,8 @@
-public class Grid {
+public class Sudoku {
     private int[][] init_cells;
     private int[][] cells;
 
-    public Grid(int[][] cells) {
+    public Sudoku(int[][] cells) {
         this.init_cells = new int[9][9];
         this.cells = new int[9][9];
 
@@ -20,13 +20,29 @@ public class Grid {
     }
 
     public void print() {
-        System.out.println("Grid:");
+        System.out.println("Sudoku:");
         for (int i = 0; i < cells.length; i++) {
             for (int j = 0; j < cells[i].length; j++) {
-                System.out.print(this.cells[i][j] + " ");
+                System.out.print(cells[i][j] + " ");
             }
             System.out.println();
         }
+    }
+
+    public int[][] getSolved() {
+        if(!isSolved())
+            solve();
+        return cells;
+    }
+
+    private boolean isSolved() {
+        for (int i = 0; i < cells.length; i++) {
+            for (int j = 0; j < cells[i].length; j++) {
+                if(!isValid(i, j))
+                    return false;
+            }
+        }
+        return true;
     }
 
     public void solve() {
@@ -57,7 +73,7 @@ public class Grid {
                     continue;
                 }
                 iter++;
-                printPartial(iter);
+//                printPartial(iter);
             }
         }
         System.out.println("No. of iterations = " + iter);
