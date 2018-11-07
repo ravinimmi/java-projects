@@ -1,3 +1,6 @@
+import java.util.Random;
+
+
 public class Sudoku {
     private int[][] init_cells;
     private int[][] cells;
@@ -92,7 +95,7 @@ public class Sudoku {
         boolean res = isValidValue(this.cells[i][j]);
         res = res && isValidRow(i, j);
         res = res && isValidCol(i, j);
-        res = res && isValidBox(3 * (i/3), 3 * (j/3));
+        res = res && isValidBox(i, j);
         return res;
     }
 
@@ -117,10 +120,14 @@ public class Sudoku {
     }
 
     private boolean isValidBox(int row, int col) {
+        int len = 3;
+        int r = len * (row / len);
+        int c = len * (col / len);
+
         int[] hash = {0, 0, 0, 0, 0, 0, 0, 0, 0};
 
-        for (int i = row; i < row + 3; i++) {
-            for (int j = col; j < col + 3; j++) {
+        for (int i = r; i < r + len; i++) {
+            for (int j = c; j < c + len; j++) {
                 if(cells[i][j] == 0)
                     continue;
 
@@ -129,7 +136,6 @@ public class Sudoku {
                 hash[cells[i][j] - 1] = 1;
             }
         }
-
         return true;
     }
 
