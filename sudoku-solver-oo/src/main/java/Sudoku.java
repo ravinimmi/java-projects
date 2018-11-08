@@ -21,7 +21,7 @@ class Cell {
         }
     }
 
-    void setEditable() {
+    private void setEditable() {
         editable = (value == null);
     }
 
@@ -122,6 +122,7 @@ class Sudoku {
                     CellPosition pos = getPrevEditableCellPos(cell.getPosition());
                     cell = cells[pos.row][pos.col];
                     cell.setValue(cell.getValue() + 1);
+
                     i = pos.row;
                     j = pos.col - 1;
                 }
@@ -160,7 +161,7 @@ class Sudoku {
                 col = col - 1;
             } else {
                 row = row - 1;
-                col = cells.length - 1;
+                col = GRID_LEN - 1;
             }
         } while(!cells[row][col].isEditable());
 
@@ -172,10 +173,11 @@ class Sudoku {
     }
 
     private boolean isValid(Cell cell) {
-        boolean res = cell.isValueValid();
-        int i = cell.getPosition().row;
-        int j = cell.getPosition().col;
+        CellPosition pos = cell.getPosition();
+        int i = pos.row;
+        int j = pos.col;
 
+        boolean res = cell.isValueValid();
         res = res && isValidRow(i, j);
         res = res && isValidCol(i, j);
         res = res && isValidBox(i, j);
