@@ -110,10 +110,8 @@ class Sudoku {
             for (int j = 0; j < cells[i].length; j++) {
                 Cell cell = cells[i][j];
 
-                if (cell.isEditable()) {
-                    while (!isValid(cell) && !areValuesExhausted(cell)) {
-                        cell.setValue(getNextCandidate(cell.getValue()));
-                    }
+                while (!isValid(cell) && !areValuesExhausted(cell) && cell.isEditable()) {
+                    cell.setValue(getNextCandidate(cell.getValue()));
                 }
 
                 if(!isValid(cell)) {

@@ -19,6 +19,14 @@ class Sudoku {
         for (int i = 0; i < cells.length; i++) {
             for (int j = 0; j < cells[i].length; j++) {
                 System.out.print(cells[i][j] + " ");
+                if(j==2 || j==5)
+                    System.out.print('|');
+            }
+            if(i == 2 || i == 5) {
+                System.out.println();
+                for (int j = 0; j <= 2 * cells[i].length; j++) {
+                    System.out.print("-");
+                }
             }
             System.out.println();
         }
