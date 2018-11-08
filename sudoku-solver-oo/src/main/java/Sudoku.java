@@ -1,16 +1,40 @@
 class Cell {
-    Integer value;
-    private boolean editable;
+    private static final int MIN_CELL_VALUE = 1;
+    private static final int MAX_CELL_VALUE = 9;
 
-    Cell(int val) {
-        if(val != 0) {
-            value = val;
-            editable = false;
-        }
-        if(val == 0) {
+    private Integer value;
+    private boolean editable;
+    private CellPosition position;
+
+    Cell(int val, int row, int col) {
+        setValue(val);
+        setEditable();
+        setPosition(row, col);
+    }
+
+    void setValue(Integer val) {
+        if(val == null || val == 0) {
             value = null;
-            editable = true;
         }
+        else {
+            value = val;
+        }
+    }
+
+    void setEditable() {
+        editable = (value == null);
+    }
+
+    Integer getValue() {
+        return value;
+    }
+
+    private void setPosition(int row, int col) {
+        position = new CellPosition(row, col);
+    }
+
+    CellPosition getPosition() {
+        return position;
     }
 
     @Override
@@ -27,6 +51,9 @@ class Cell {
         return editable;
     }
 
+    boolean isValueValid() {
+        return (value != null && value >= MIN_CELL_VALUE && value <= MAX_CELL_VALUE);
+    }
 }
 
 
@@ -42,16 +69,13 @@ class CellPosition {
 
 
 class Sudoku {
-    private static final int MIN_CELL_VALUE = 1;
-    private static final int MAX_CELL_VALUE = 9;
-
     private static final int GRID_LEN = 9;
     private Cell[][] cells = new Cell[GRID_LEN][GRID_LEN];
 
     Sudoku(int[][] cells) {
         for (int i = 0; i < cells.length; i++) {
             for (int j = 0; j < cells[i].length; j++) {
-                this.cells[i][j] = new Cell(cells[i][j]);
+                this.cells[i][j] = new Cell(cells[i][j], i, j);
             }
         }
     }
@@ -86,21 +110,20 @@ class Sudoku {
             for (int j = 0; j < cells[i].length; j++) {
                 Cell cell = cells[i][j];
 
-                while(!isValid(i, j) && !areValuesExhausted(cell) && cell.isEditable()) {
-                    cell.value = getNextCandidate(cell.value);
+                if (cell.isEditable()) {
+                    while (!isValid(cell) && !areValuesExhausted(cell)) {
+                        cell.setValue(getNextCandidate(cell.getValue()));
+                    }
                 }
 
-                if(!isValid(i, j)) {
-
+                if(!isValid(cell)) {
                     if(cell.isEditable())
-                        cell.value = null;
-
-                    CellPosition pos = getPrevEditableCellPos(new CellPosition(i, j));
+                        cell.setValue(null);
+                    CellPosition pos = getPrevEditableCellPos(cell.getPosition());
+                    cell = cells[pos.row][pos.col];
+                    cell.setValue(cell.getValue() + 1);
                     i = pos.row;
-                    j = pos.col;
-
-                    cells[i][j].value += 1;
-                    j--;
+                    j = pos.col - 1;
                 }
                 iter++;
             }
@@ -112,7 +135,7 @@ class Sudoku {
         int[][] output = new int[GRID_LEN][GRID_LEN];
         for (int i = 0; i < cells.length; i++) {
             for (int j = 0; j < cells[i].length; j++) {
-                output[i][j] = cells[i][j].value;
+                output[i][j] = cells[i][j].getValue();
             }
         }
         return output;
@@ -121,7 +144,7 @@ class Sudoku {
     private boolean isSolved() {
         for (int i = 0; i < cells.length; i++) {
             for (int j = 0; j < cells[i].length; j++) {
-                if(!isValid(i, j))
+                if(!isValid(cells[i][j]))
                     return false;
             }
         }
@@ -141,29 +164,28 @@ class Sudoku {
             }
         } while(!cells[row][col].isEditable());
 
-        return new CellPosition(row, col);
+        return cells[row][col].getPosition();
     }
 
     private boolean areValuesExhausted(Cell cell) {
-        return cell.value != null && cell.value == -1;
+        return cell.getValue() != null && cell.getValue() == -1;
     }
 
-    private boolean isValid(int i, int j) {
-        boolean res = isValidValue(cells[i][j]);
+    private boolean isValid(Cell cell) {
+        boolean res = cell.isValueValid();
+        int i = cell.getPosition().row;
+        int j = cell.getPosition().col;
+
         res = res && isValidRow(i, j);
         res = res && isValidCol(i, j);
         res = res && isValidBox(i, j);
         return res;
     }
 
-    private boolean isValidValue(Cell cell) {
-        return (cell.value != null && cell.value >= MIN_CELL_VALUE && cell.value <= MAX_CELL_VALUE);
-    }
-
     private boolean isValidRow(int row, int col) {
         for(int t=0; t<cells.length; t++) {
             Cell cell = cells[row][t];
-            if (cell.value != null && t != col && cell.value.equals(cells[row][col].value))
+            if (cell.getValue() != null && t != col && cell.getValue().equals(cells[row][col].getValue()))
                 return false;
         }
         return true;
@@ -172,7 +194,7 @@ class Sudoku {
     private boolean isValidCol(int row, int col) {
         for(int t=0; t<cells.length; t++) {
             Cell cell = cells[t][col];
-            if (cell.value != null && t != row && cell.value.equals(cells[row][col].value))
+            if (cell.getValue() != null && t != row && cell.getValue().equals(cells[row][col].getValue()))
                 return false;
         }
         return true;
@@ -186,7 +208,7 @@ class Sudoku {
         for (int i = r; i < r + len; i++) {
             for (int j = c; j < c + len; j++) {
                 Cell cell = cells[i][j];
-                if (cell.value != null && !(i == row && j == col) && cell.value.equals(cells[row][col].value))
+                if (cell.getValue() != null && !(i == row && j == col) && cell.getValue().equals(cells[row][col].getValue()))
                     return false;
             }
         }
